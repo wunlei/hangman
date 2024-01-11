@@ -21,11 +21,30 @@ export default class State {
     return { word: this.currentWord, tip: this.currentTip };
   }
 
-  setCurrentWord() {
+  getRandomWord() {
     const randomNum = getRandomArbitrary(0, this.words.length - 1);
-    this.currentWord = this.words[randomNum].word.toUpperCase();
+    const newWord = this.words[randomNum].word.toUpperCase();
+    const newTip = this.words[randomNum].description;
+
+    if (!this.currentWord || !this.currentTip) {
+      return { word: newWord, tip: newTip };
+    }
+
+    if (this.words.length === 1) {
+      return { word: this.currentWord, tip: this.currentTip };
+    }
+
+    if (this.currentWord !== newWord) {
+      return { word: newWord, tip: newTip };
+    }
+
+    return this.getRandomWord();
+  }
+
+  setCurrentWord() {
+    this.currentWord = this.getRandomWord().word;
     this.remainingLetters = this.currentWord;
-    this.currentTip = this.words[randomNum].description;
+    this.currentTip = this.getRandomWord().tip;
   }
 
   resetCurrentData() {
